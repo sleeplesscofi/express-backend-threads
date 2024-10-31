@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsnd -r tsconfig-paths/register --respawn --clear src/index.ts",
     "build": "rimraf ./dist && tsc && resolve-tspaths",
-    "start": "yarn build && node dist/index.js"
+    "start": "pnpm build && node dist/index.js"
   },
   "keywords": [],
   "author": "",
