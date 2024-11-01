@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsnd -r tsconfig-paths/register --respawn --clear src/index.ts",
     "build": "rimraf ./dist && tsc && resolve-tspaths",
-    "start": "pnpm build && node dist/index.js"
+    "start": "pnpm build && node dist/index.js",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,14 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "husky": "8",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.12.2"
   }
 }
