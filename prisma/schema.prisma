@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EntityType {
+  user
+  post
+}
+
+enum PostType {
+  post
+  comment
+  reply
+}
+
+enum ActionType {
+  like
+  unlike
+  comment
+  view
+  follow
+  repost
+}
+
+model User {
+  id             String         @id @default(uuid())
+  email          String         @unique
+  password       String
+  username       String         @unique
+  phone          String
+  description    String
+  firstName      String         @map("first_name")
+  lastName       String         @map("last_name")
+  birthDate      DateTime       @map("birth_date")
+  followersCount Int            @default(0) @map("followers_count")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  followers      Follower[]     @relation("Followers")
+  following      Follower[]     @relation("Following")
+  UserActivity   UserActivity[]
+  Post           Post[]
+  Likes          Likes[]
+  Media          Media[]
+
+  @@index([email], map: "users_email_idx")
+  @@index([username], map: "users_username_idx")
+  @@index([email, username], map: "users_email_username_idx")
+  @@map("users")
+}
+
+model Follower {
+  id String @id @default(uuid())
+
+  followerId String   @map("followers_follower_id")
+  followeeId String   @map("followers_followee_id")
+  followedAt DateTime @default(now()) @map("followers_followed_at")
+
+  follower User @relation("Followers", fields: [followerId], references: [id])
+  followee User @relation("Following", fields: [followeeId], references: [id])
+
+  @@index([followerId, followeeId], map: "followers_follower_id_followed_id_idx")
+  @@map("followers")
+}
+
+model UserActivity {
+  id           Int        @id @default(autoincrement())
+  actionedBy   String     @map("actioned_by")
+  actionTypeId Int        @map("action_type_id")
+  targetId     String     @map("target_id")
+  targetType   EntityType @map("target_type")
+  actionedAt   DateTime   @default(now()) @map("actioned_at")
+
+  actionBy User @relation(fields: [actionedBy], references: [id])
+
+  @@map("user_activities")
+}
+
+model ActionTypes {
+  id     Int        @id @default(autoincrement())
+  name   String     @map("name")
+  action ActionType @map("action")
+
+  @@map("action_types")
+}
+
+model Post {
+  id            String   @id @default(uuid())
+  content       String
+  likeCount     Int      @default(0) @map("like_count")
+  commentsCount Int      @default(0) @map("comments_count")
+  repostCount   Int      @default(0) @map("repost_count")
+  parentPostId  String?  @map("parent_post_id")
+  postType      PostType @map("post_type")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  createdBy     String   @map("created_by")
+  createdUser   User     @relation(fields: [createdBy], references: [id])
+
+  parentPost Post?   @relation("ParentPost", fields: [parentPostId], references: [id])
+  posts      Post[]  @relation("ParentPost")
+  Likes      Likes[]
+
+  @@index([parentPostId], map: "posts_parent_post_id_idx")
+  @@map("posts")
+}
+
+model Likes {
+  id String @id @default(uuid())
+
+  postId  String   @map("post_id")
+  userId  String   @map("user_id")
+  likedAt DateTime @default(now()) @map("liked_at")
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([postId, userId], map: "likes_post_id_user_id_idx")
+  @@map("likes")
+}
+
+model Media {
+  id         String     @id @default(uuid())
+  filePath   String     @map("file_path")
+  fileType   String     @map("file_type")
+  entityType EntityType @map("entity_type")
+  entityId   String     @map("entity_id")
+  uploadedBy String     @map("uploaded_by")
+  uploadedAt DateTime   @default(now()) @map("uploaded_at")
+
+  user User @relation(fields: [uploadedBy], references: [id])
+
+  @@index([entityId], map: "media_entity_id_idx")
+  @@map("media")
+}
