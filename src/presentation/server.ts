@@ -1,7 +1,9 @@
-import express from "express";
-import http from "http";
+import http from "node:http";
 
+import express from "express";
 import type { Router } from "express";
+import cors from "cors";
+import helmet from "helmet";
 
 interface ServerOptions {
   port: number;
@@ -20,6 +22,12 @@ export class Server {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+
+    // CORS
+    this.app.use(cors());
+
+    // Secure
+    this.app.use(helmet());
 
     // if (publicPath) {
     //   this.app.use(express.static(publicPath));
