@@ -1,12 +1,11 @@
 import { Router } from "express";
+import { ApiPruebas } from "@/presentation/routes/pruebaRoute";
 
 export class AppRoutes {
   static get routes(): Router {
     const router = Router();
 
-    router.use("/", (req, res) => {
-      res.send("Hello World!");
-    });
+    router.use("/", ApiPruebas.routes());
 
     return router;
   }
