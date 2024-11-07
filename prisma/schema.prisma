@@ -141,5 +141,5 @@ model Media {
   user User @relation(fields: [uploadedBy], references: [id])
 
   @@index([entityId], map: "media_entity_id_idx")
-  @@map("media")
+  @@map("medias")
 }
