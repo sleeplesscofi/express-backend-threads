@@ -12,7 +12,7 @@ interface ServerOptions {
 }
 
 export class Server {
-  public readonly app = express();
+  public readonly app: express.Application = express();
   private serverListener?: http.Server;
 
   constructor(private readonly options: ServerOptions) {}
