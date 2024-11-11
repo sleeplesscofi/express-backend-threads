@@ -1,10 +1,22 @@
+import { prisma } from "@/data/postgresql";
 import { LoginDto } from "../dtos";
+import { NotFoundError } from "@/shared/errors";
 
 export class AuthService {
   constructor() {}
 
   public async login(loginDto: LoginDto) {
-    return loginDto;
+    const user = await prisma.user.findUnique({
+      where: {
+        email: loginDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user;
   }
 
   public async register() {}
