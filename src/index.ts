@@ -1,9 +1,16 @@
-import { funcion } from "./controller";
+import { Server } from "@/presentation/server";
+import { AppRoutes } from "@/presentation/routes";
+import { envs } from "@/config";
 
 (() => {
-  console.log({
-    name: "express-backend-threads",
-  });
+  main();
 })();
 
-funcion("Erick");
+function main() {
+  const server = new Server({
+    port: envs.PORT,
+    routes: AppRoutes.routes,
+  });
+
+  server.start();
+}
