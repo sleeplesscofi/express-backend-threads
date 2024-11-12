@@ -13,7 +13,7 @@ export class LoginDto {
   @IsString()
   password!: string;
 
-  static validateLoginDto = async (
+  static validate = async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any,
   ): Promise<[LoginDto, null] | [null, string[]]> => {

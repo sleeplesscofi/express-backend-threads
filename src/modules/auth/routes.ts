@@ -10,7 +10,8 @@ export class AuthRoutes {
 
     const authController = new AuthController(authService);
 
-    router.get("/login", authController.login);
+    router.post("/login", authController.login);
+    router.post("/sign-up", authController.register);
 
     return router;
   }

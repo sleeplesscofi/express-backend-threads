@@ -1,5 +1,6 @@
 import { Server } from "@/presentation/server";
 import { AppRoutes } from "@/presentation/routes";
+import { envs } from "@/config";
 
 (() => {
   main();
@@ -7,7 +8,7 @@ import { AppRoutes } from "@/presentation/routes";
 
 function main() {
   const server = new Server({
-    port: 3000,
+    port: envs.PORT,
     routes: AppRoutes.routes,
   });
 
